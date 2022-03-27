@@ -26,14 +26,14 @@ public class Simulation2D {
         }
     }
 
-    public int[][] simulate(double temperature) {
+    public void simulate(double temperature) {
         long start = System.currentTimeMillis();
 
         for (int i = 0; i <= flipsToDo; i++) {
             int x = RANDOM.nextInt(size);
             int y = RANDOM.nextInt(size);
             int otherSpins = nbOfNeighbours(x, y);
-            if (otherSpins >= 2) { //here delta E is >=0, so flip
+            if (otherSpins >= 2) { //here delta E is <=0, so flip
                 model[x][y] *= -1;
                 continue;
             }
@@ -45,8 +45,6 @@ public class Simulation2D {
 
         double seconds = (System.currentTimeMillis() - start) / 1000D;
         System.out.println(seconds);
-
-        return model;
     }
 
     //Counts non-matching neighbours

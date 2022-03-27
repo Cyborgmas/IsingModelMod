@@ -28,13 +28,15 @@ public class Simulation3D {
         }
     }
 
-    public int[][][] simulate(double temperature) {
+    public void simulate(double temperature) {
+        long start = System.currentTimeMillis();
+
         for (int i = 0; i <= flipsToDo; i++) {
             int x = RANDOM.nextInt(size);
             int y = RANDOM.nextInt(size);
             int z = RANDOM.nextInt(size);
             int otherSpins = nbOfNeighbours(x, y, z);
-            if (otherSpins >= 3) { //here delta E is >=0, so flip
+            if (otherSpins >= 3) { //here delta E is <=0, so flip
                 model[x][y][z] *= -1;
                 continue;
             }
@@ -44,7 +46,8 @@ public class Simulation3D {
                 model[x][y][z] *= -1;
         }
 
-        return model;
+        double seconds = (System.currentTimeMillis() - start) / 1000D;
+        System.out.println(seconds);
     }
 
     //Counts non-matching neighbours

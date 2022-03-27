@@ -80,14 +80,15 @@ public class SimulationCommand {
      */
     public static int execute2D(CommandSourceStack sourceStack, int size, double temperature, int flips, BlockState spinUp, BlockState spinDown, boolean simulate) {
         Simulation2D simulation = flips == -1 ? new Simulation2D(size) : new Simulation2D(size, (int) Math.pow(10, flips));
-        int[][] model = simulate ? simulation.simulate(temperature) : simulation.model;
+        if (simulate)
+            simulation.simulate(temperature);
         BlockPos pos = new BlockPos(sourceStack.getPosition());
 
         for (int i = 0; i < size; i++) {
             pos = pos.east(1); //east is positive x direction
             for (int j = 0; j < size; j++) {
                 pos = pos.south(1); //south is positive z direction
-                sourceStack.getLevel().setBlock(pos, model[i][j] == 1 ? spinUp : spinDown, Block.UPDATE_ALL);
+                sourceStack.getLevel().setBlock(pos, simulation.model[i][j] == 1 ? spinUp : spinDown, Block.UPDATE_ALL);
             }
             pos = pos.south(-size);
         }
@@ -97,7 +98,8 @@ public class SimulationCommand {
 
     public static int execute3D(CommandSourceStack sourceStack, int size, double temperature, int flips, BlockState spinUp, BlockState spinDown, boolean simulate) {
         Simulation3D simulation = flips == -1 ? new Simulation3D(size) : new Simulation3D(size, (int) Math.pow(10, flips));
-        int[][][] model = simulate ? simulation.simulate(temperature) : simulation.model;
+        if(simulate)
+            simulation.simulate(temperature);
         BlockPos pos = new BlockPos(sourceStack.getPosition()).below(1);
 
         for (int i = 0; i < size; i++) {
@@ -106,7 +108,7 @@ public class SimulationCommand {
                 pos = pos.south(1); //south is positive z direction
                 for (int k = 0; k < size; k++) { //above is positive y direction
                     pos = pos.above(1);
-                    sourceStack.getLevel().setBlock(pos, model[i][j][k] == 1 ? spinUp : spinDown, Block.UPDATE_ALL);
+                    sourceStack.getLevel().setBlock(pos, simulation.model[i][j][k] == 1 ? spinUp : spinDown, Block.UPDATE_ALL);
                 }
                 pos = pos.below(size);
             }
